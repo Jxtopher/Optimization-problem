@@ -34,8 +34,6 @@ void createClauses(vector<unsigned int> &v, stringstream &results, unsigned int 
 }
 
 int main(int argc, char **argv) {
-
-
     stringstream results;
     unsigned int n = 4;
     if (argc == 2) 
