@@ -1,13 +1,13 @@
-//
-// @Author: Jxtopher
-// @License: *
-// @Date: 2018
-// @Version: 1
-// @Purpose: solve the n-queeen problem with the depth-first search
-//
-// @Compilation:
-// g++ n-queens.cpp -std=c++0x -Wall -O -pedantic -Wall -Wextra -Wcast-align -Wcast-qual -Wctor-dtor-privacy -Wdisabled-optimization -Wformat=2 -Winit-self -Wlogical-op -Wmissing-declarations -Wmissing-include-dirs -Wnoexcept -Wold-style-cast -Woverloaded-virtual -Wredundant-decls -Wshadow -Wsign-conversion -Wsign-promo -Wstrict-null-sentinel -Wstrict-overflow=5 -Wswitch-default -Wundef -Werror -Wno-unused
-//
+///
+/// \file n-queens-ppc.cpp
+/// \author Jxtopher
+/// \version 1
+/// \date 2018
+/// \brief solve the n-queeen problem with the depth-first search
+///
+/// @compilation: g++ n-queens.cpp -std=c++0x -Wall -O -pedantic -Wall -Wextra -Wcast-align -Wcast-qual -Wctor-dtor-privacy -Wdisabled-optimization -Wformat=2 -Winit-self -Wlogical-op -Wmissing-declarations -Wmissing-include-dirs -Wnoexcept -Wold-style-cast -Woverloaded-virtual -Wredundant-decls -Wshadow -Wsign-conversion -Wsign-promo -Wstrict-null-sentinel -Wstrict-overflow=5 -Wswitch-default -Wundef -Werror -Wno-unused
+///
+
 /* @Example class call Nqueen to solve the problem n-queen:
 using namespace jxtopher;
 
