@@ -1,11 +1,13 @@
-//
-// @Author: Jxtopher
-// @Date: 2019
-// @Version: 1
-// @Purpose: Generator CNF File for n-queens problem
-// @compilation: g++ -Os n-queens-cnf-file.cpp -o n-queens-cnf-file
-// @Execution: ./n-queen-cnf-file 4 | picosat --all
-//
+///
+/// \file n-queens-cnf-file.cpp
+/// \author Jxtopher
+/// \version 1
+/// \date 2019
+/// \brief Generator CNF File for n-queens problem
+///
+/// @compilation: g++ -Os n-queens-cnf-file.cpp -o n-queens-cnf-file
+/// @Execution: ./n-queen-cnf-file 4 | picosat --all
+///
 
 #include <iostream>
 #include <vector>
