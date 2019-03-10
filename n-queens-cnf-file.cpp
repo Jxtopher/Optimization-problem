@@ -6,7 +6,7 @@
 /// \brief Generator CNF File for n-queens problem
 ///
 /// @compilation: g++ -Os n-queens-cnf-file.cpp -o n-queens-cnf-file
-/// @Execution: ./n-queens-cnf-file 4 | picosat --all
+/// @execution: ./n-queens-cnf-file 4 | picosat --all
 ///
 
 #include <cstdlib>  // EXIT_SUCCESS
