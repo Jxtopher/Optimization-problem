@@ -6,41 +6,43 @@
 /// \brief Generator CNF File for n-queens problem
 ///
 /// @compilation: g++ -Os n-queens-cnf-file.cpp -o n-queens-cnf-file
-/// @Execution: ./n-queen-cnf-file 4 | picosat --all
+/// @Execution: ./n-queens-cnf-file 4 | picosat --all
 ///
 
-#include <iostream>
-#include <vector>
-#include <sstream>
+#include <cstdlib>  // EXIT_SUCCESS
+#include <iostream> // count, endl
+#include <vector>   // vector
+#include <sstream>  // stringstream
 
 using namespace std;
 
-void createClauses(vector<unsigned int> &v, stringstream &results, unsigned int &clauses) {
-    for (unsigned int l = 0 ; l < v.size() ; l++) {
-        results<<"-"<<v[l]<<" ";
+void createnumClauses(vector<unsigned int> &v, stringstream &clauses, unsigned int &numClauses) {
+    for (unsigned int i = 0 ; i < v.size() ; i++) {
+        clauses<<"-"<<v[i]<<" ";
     }
-    clauses++;
-    results<<"0"<<endl;
+
+    numClauses++;
+    clauses<<"0"<<endl;
 
     if (2 < v.size()) {
-        for (unsigned int l = 0 ; l < v.size() ; l++) {
-            for(unsigned int m = l + 1 ; m < v.size() ; m++) {
-                clauses++;
-                results<<"-"<<v[l]<<" -"<<v[m]<<" 0"<<endl;
+        for (unsigned int i = 0 ; i < v.size() ; i++) {
+            for(unsigned int j = i + 1 ; j < v.size() ; j++) {
+                numClauses++;
+                clauses<<"-"<<v[i]<<" -"<<v[j]<<" 0"<<endl;
             }
         }
     }
-    results<<endl;
-    v.clear();
-    
+
+    clauses<<endl;
+    v.clear();   
 }
 
 int main(int argc, char **argv) {
-    stringstream results;
+    stringstream clauses;
     unsigned int n = 4;
     if (argc == 2) 
         n = atoi(argv[1]);
-    unsigned int clauses = 0;
+    unsigned int numClauses = 0;
     unsigned int matrix[n][n];
 
     for(unsigned int i = 0, count = 1 ; i < n ; i++) {
@@ -48,96 +50,92 @@ int main(int argc, char **argv) {
             matrix[i][j] = count++;
         }
     }
-       
 
-    // Lignes
+
+    // Lines
+    clauses<<"c lines"<<endl;
     for(unsigned int i = 0 ; i < n ; i++) {
         for(unsigned int j = 0 ; j < n ; j++) {
-           results<<matrix[i][j]<<" ";
+           clauses<<matrix[i][j]<<" ";
         }
-        clauses++;
-        results<<"0"<<endl;
+        numClauses++;
+        clauses<<"0"<<endl;
 
         for(unsigned int j = 0 ; j < n ; j++) {
             for(unsigned int k = j + 1 ; k < n ; k++) {
-                clauses++;
-                results<<"-"<<matrix[i][j]<<" -"<<matrix[i][k]<<" 0"<<endl;
+                numClauses++;
+                clauses<<"-"<<matrix[i][j]<<" -"<<matrix[i][k]<<" 0"<<endl;
             }
         }
 
-        results<<endl;
+        clauses<<endl;
     }
 
 
-    // Colonnes
-    results<<"c colonnes"<<endl;
+    // Columns
+    clauses<<"c columns"<<endl;
     for(unsigned int i = 0 ; i < n ; i++) {
         for(unsigned int j = 0 ; j < n ; j++) {
-           results<<matrix[j][i]<<" ";
+           clauses<<matrix[j][i]<<" ";
         }
-        clauses++;
-        results<<"0"<<endl;
+        numClauses++;
+        clauses<<"0"<<endl;
 
         for(unsigned int j = 0 ; j < n ; j++) {
             for(unsigned int k = j + 1 ; k < n ; k++) {
-                clauses++;
-                results<<"-"<<matrix[j][i]<<" -"<<matrix[k][i]<<" 0"<<endl;
+                numClauses++;
+                clauses<<"-"<<matrix[j][i]<<" -"<<matrix[k][i]<<" 0"<<endl;
             }
         }
 
-        results<<endl;
+        clauses<<endl;
     }
 
-    // diagos
-    results<<"c diagos"<<endl;
+    // diagonales
+    clauses<<"c diagonales"<<endl;
     vector<unsigned int> v;
-    for (unsigned int k = 0 ; k < n ; k++) {
-            v.push_back(matrix[k][k]);
+    for (unsigned int i = 0 ; i < n ; i++) {
+            v.push_back(matrix[i][i]);
     }
-    createClauses(v, results, clauses);
+    createnumClauses(v, clauses, numClauses);
 
-    
-
-    for (unsigned int k = 1 ; k < n - 1 ; k++) { 
-        for(unsigned int i = 0,  j = k ; j < n ; i++, j++) {
-                v.push_back(matrix[i][j]);
+    for (unsigned int i = 1 ; i < n - 1 ; i++) { 
+        for(unsigned int j = 0,  k = i ; k < n ; j++, k++) {
+                v.push_back(matrix[j][k]);
         }
-        createClauses(v, results, clauses);
+        createnumClauses(v, clauses, numClauses);
 
-        for(unsigned int i = k,  j = 0 ; i < n ; i++, j++) {
-                v.push_back(matrix[i][j]);
+        for(unsigned int j = i,  k = 0 ; j < n ; j++, k++) {
+                v.push_back(matrix[j][k]);
         }
-        createClauses(v, results, clauses);
+        createnumClauses(v, clauses, numClauses);
     }
     
-    
-
-    // anti-diagos
-    results<<"c anti-diagos"<<endl;
-    for (unsigned int k = 0 ; k < n ; k++) { 
-            v.push_back(matrix[k][n-k-1]);
+    // anti-diagonals
+    clauses<<"c anti-diagonals"<<endl;
+    for (unsigned int i = 0 ; i < n ; i++) { 
+            v.push_back(matrix[i][n-i-1]);
     }
+    createnumClauses(v, clauses, numClauses);
 
-    createClauses(v, results, clauses);
-
-    for (unsigned int k = 1 ; k < n - 1 ; k++) { 
-        for(unsigned int i = 0,  j = k ; j < n ; i++, j++) {
-                v.push_back(matrix[i][n-1-j]);
+    for (unsigned int i = 1 ; i < n - 1 ; i++) { 
+        for(unsigned int j = 0,  k = i ; k < n ; j++, k++) {
+                v.push_back(matrix[j][n-1-k]);
         }
-        createClauses(v, results, clauses);
+        createnumClauses(v, clauses, numClauses);
 
-        for(unsigned int i = k,  j = 0 ; i < n ; i++, j++) {
-                v.push_back(matrix[i][n-1-j]);
+        for(unsigned int j = i,  k = 0 ; j < n ; j++, k++) {
+                v.push_back(matrix[j][n-1-k]);
         }
-        createClauses(v, results, clauses);
+        createnumClauses(v, clauses, numClauses);
     }
 
     //
     cout<<"c  "<<n<<"-queens-CNF-File.cnf"<<endl;
     cout<<"c"<<endl;
-    cout<<"p cnf "<<n*n<<" "<<clauses<<endl;
+    cout<<"p cnf "<<n*n<<" "<<numClauses<<endl;
 
-    cout<<results.str();
+    cout<<clauses.str();
 
-    return 0;
+    return EXIT_SUCCESS;
 }
