@@ -6,7 +6,7 @@
 /// \brief http://www.csplib.org/Problems/prob054/
 ///
 /// @compilation: g++ -Os n-queens-cnf-file.cpp -o n-queens-cnf-file
-/// @Execution: g++ n-queens-ppc.cpp -lgecodeint -lgecodesearch -lgecodekernel -lgecodesupport -lgecodedriver -lgecodeminimodel -lgecodegist
+/// @execution: g++ n-queens-ppc.cpp -lgecodeint -lgecodesearch -lgecodekernel -lgecodesupport -lgecodedriver -lgecodeminimodel -lgecodegist
 ///
 
 //
