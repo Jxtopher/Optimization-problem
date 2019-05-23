@@ -1,7 +1,8 @@
+#include <cassert>
 #include "subset_sum_problem.h"
 
-// On suppose a<b
 int rand_a_b(int a, int b) {
+    assert(a < b);
     return rand() % (b - a) + a;
 }
 
