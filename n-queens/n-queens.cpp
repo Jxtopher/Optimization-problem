@@ -14,7 +14,8 @@ using namespace jxtopher;
 int main() {
     unsigned int N = 5;
     Nqueen solver;
-    solver.nqueen(N);
+    solver.nqueen_recursive(N);
+	solver.nqueen_iterative(N);
     return EXIT_SUCCESS;
 }
 */
@@ -24,6 +25,7 @@ int main() {
 #include <cassert>
 #include <cmath>
 #include <list>
+#include <vector>
 
 using namespace std;
 
@@ -33,6 +35,15 @@ class Solution {
 public:
 	Solution(unsigned int _n) : n(_n) {
 		s = new int[_n];
+	}
+
+	Solution(const vector<int> & solution) {
+		n = solution.size();
+		s = new int[solution.size()];
+		
+		for (unsigned int i = 0 ; i < solution.size() ; i++) {
+			s[i] = solution[i];
+		}
 	}
 
 	Solution(const Solution & solution) {
@@ -95,24 +106,46 @@ private:
 
 class Nqueen {
 public:
-	void solver_nqueen(Solution &current_sol, list<Solution> & final_solution) {
-		solver_nqueen(current_sol, 0, final_solution);
+	void backtracking_recursive(Solution &current_sol, list<Solution> & final_solution) {
+		backtracking_recursive(current_sol, 0, final_solution);
 	}
 
-	void nqueen(unsigned int n) {
+	void nqueen_recursive(unsigned int n) {
 		Solution solution(n);
 		list <Solution> final_solution;
-		solver_nqueen(solution, final_solution);
+		backtracking_recursive(solution, final_solution);
 
 		cout<<"[+] Possible solutions :"<<endl;
-		for (std::list<jxtopher::Solution>::iterator it=final_solution.begin(); it!=final_solution.end(); ++it)
+		unsigned int i = 1;
+		for (std::list<jxtopher::Solution>::iterator it=final_solution.begin(); it!=final_solution.end(); ++it) {
+			cout<<i++<<" : ";
 			(*it).print();
+		}
 		cout<<"[+] *** END ***"<<endl;
 	}
 
+	void nqueen_iterative(unsigned int n) {
+		Solution solution(n);
+		list <vector<int>> final_solution;
+		backtracking_iterative(static_cast<int>(n), n, final_solution);
+
+		cout<<"[+] Possible solutions :"<<endl;
+		unsigned int i = 1;
+		for (std::list<vector<int>>::iterator it=final_solution.begin(); it!=final_solution.end(); ++it) {
+			cout<<i++<<" : ";
+			for (unsigned int j = 0 ; j < (*it).size() ; j++) {
+				cout<<(*it)[j]<<" ";
+			}
+			cout<<endl;
+		}
+		cout<<"[+] *** END ***"<<endl;
+	}
 
 protected:
-	void solver_nqueen(Solution &current_sol, unsigned int currentCell, list<Solution> & final_solution) {
+	// --------------------------------------------------------------------------
+	// Backtracking recursive
+	// --------------------------------------------------------------------------
+	void backtracking_recursive(Solution &current_sol, unsigned int currentCell, list<Solution> & final_solution) {
 		//current_sol.print();
 		if (current_sol.size() == currentCell) {
 			final_solution.push_front(Solution(current_sol));
@@ -124,19 +157,23 @@ protected:
 				current_sol[currentCell] = static_cast<int>(i);
 
 				//Verification des contraites
-				bool constraint_line = check_line(current_sol, currentCell + 1);
-				bool constraint_diagonal = check_diagonal(current_sol, currentCell + 1);
-
-				if (constraint_line && constraint_diagonal) {
+				if (filtering(current_sol, currentCell + 1)) {
 					// Descendre dans l'arbre (parcourt en profondeur)
-					solver_nqueen(current_sol, currentCell + 1, final_solution);
+					backtracking_recursive(current_sol, currentCell + 1, final_solution);
 				}
 				i++;
 			}
 		}
 	}
 
-	bool check_diagonal(Solution &solution, unsigned int n) {
+	// Vérification des contraites
+	bool filtering(const Solution &solution, const unsigned int n) {
+			bool constraint_line = check_line(solution, n);
+			bool constraint_diagonal = check_diagonal(solution, n);
+			return constraint_line && constraint_diagonal;
+	}
+
+	bool check_diagonal(const Solution &solution, const unsigned int n) {
 		for (unsigned int i = 0 ; i < n ; i++) {
 			for (unsigned int j = i + 1 ; j < n ; j++) {
 					if (abs(solution[i] - solution[j]) == abs(static_cast<int>(i) - static_cast<int>(j))) {
@@ -147,7 +184,84 @@ protected:
 		return true;
 	}
 
-	bool check_line(Solution &solution, unsigned int n) {
+	bool check_line(const Solution &solution, const unsigned int n) {
+		for (unsigned int i = 0 ; i < n ; i++) {
+			for (unsigned int j = i + 1 ; j < n; j++) {
+				if (solution[i] == solution[j])
+					return false;
+			}
+		}
+		return true;
+	}
+
+	// --------------------------------------------------------------------------
+	// Backtracking iterative
+	// --------------------------------------------------------------------------
+	void backtracking_iterative(const int nbDigit, const unsigned int len_string, list<vector<int>> & final_solution) {
+		vector<int> string;
+		unsigned int index = 0;
+		
+		while(true) {
+			if (string.size() < len_string) {
+				string.push_back(0);
+				index++;
+			} else if(string[string.size() - 1] != nbDigit - 1) {
+					string[string.size() - 1] = (string[string.size() - 1] + 1) % nbDigit;
+			} else {
+				do {
+					string.pop_back();
+					if (string.size() == 0) {
+						return ;
+					}
+				} while (string[string.size() - 1] == nbDigit - 1);
+				string[string.size() - 1] = (string[string.size() - 1] + 1) % nbDigit;
+			}
+
+			// Filtrage
+			while (!filtering(string, string.size())) {
+				if(string[string.size() - 1] != nbDigit - 1) {
+					string[string.size() - 1] = (string[string.size() - 1] + 1) % nbDigit;
+				} else {
+					do {
+						string.pop_back();
+						if (string.size() == 0) {
+							return ;
+						}
+					} while (string[string.size() - 1] == nbDigit - 1);
+					string[string.size() - 1] = (string[string.size() - 1] + 1) % nbDigit;
+				}
+			}
+
+			// Memorisation des solutions valide
+			if (string.size() == len_string) {
+				final_solution.push_front(string);
+				/*for (unsigned int k = 0 ; k < string.size() ; k++)
+					cout<<string[k]<<" ";
+				cout<<endl;*/
+			}
+		}
+	}
+
+
+	// Vérification des contraites
+	bool filtering(const vector<int> &solution, const unsigned int n) {
+			bool constraint_line = check_line(solution, n);
+			bool constraint_diagonal = check_diagonal(solution, n);
+			return constraint_line && constraint_diagonal;
+	}
+
+	bool check_diagonal(const vector<int> &solution, const unsigned int n) {
+		for (unsigned int i = 0 ; i < n ; i++) {
+			for (unsigned int j = i + 1 ; j < n ; j++) {
+					if (abs(solution[i] - solution[j]) == abs(static_cast<int>(i) - static_cast<int>(j))) {
+						return false;
+					}
+			}
+		}
+		return true;
+	}
+
+	bool check_line(const vector<int> &solution, const unsigned int n) {
 		for (unsigned int i = 0 ; i < n ; i++) {
 			for (unsigned int j = i + 1 ; j < n; j++) {
 				if (solution[i] == solution[j])
@@ -159,3 +273,5 @@ protected:
 };
 
 }
+
+
