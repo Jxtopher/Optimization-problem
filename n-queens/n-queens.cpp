@@ -22,7 +22,6 @@ int main() {
 
 #include <cstdlib>
 #include <iostream>
-#include <cassert>
 #include <cmath>
 #include <list>
 #include <vector>

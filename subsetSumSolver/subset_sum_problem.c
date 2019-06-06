@@ -1,4 +1,3 @@
-#include <cassert>
 #include "subset_sum_problem.h"
 
 int rand_a_b(int a, int b) {
