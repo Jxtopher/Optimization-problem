@@ -1,9 +1,9 @@
 ///
-/// \file n-queens-ppc.cpp
-/// \author Jxtopher
-/// \version 1
-/// \date 2019
-/// \brief http://www.csplib.org/Problems/prob054/
+/// @file n-queens-ppc.cpp
+/// @author Jxtopher
+/// @version 1
+/// @date 2019
+/// @brief http://www.csplib.org/Problems/prob054/
 ///
 /// @compilation: g++ -Os n-queens-cnf-file.cpp -o n-queens-cnf-file
 /// @execution: g++ n-queens-ppc.cpp -lgecodeint -lgecodesearch -lgecodekernel -lgecodesupport -lgecodedriver -lgecodeminimodel -lgecodegist

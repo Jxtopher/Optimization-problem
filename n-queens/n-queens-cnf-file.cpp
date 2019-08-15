@@ -1,9 +1,9 @@
 ///
-/// \file n-queens-cnf-file.cpp
-/// \author Jxtopher
-/// \version 1
-/// \date 2019
-/// \brief Generator CNF File for n-queens problem
+/// @file n-queens-cnf-file.cpp
+/// @author Jxtopher
+/// @version 1
+/// @date 2019
+/// @brief Generator CNF File for n-queens problem
 ///
 /// @compilation: g++ -Os n-queens-cnf-file.cpp -o n-queens-cnf-file
 /// @execution: ./n-queens-cnf-file 4 | picosat --all
