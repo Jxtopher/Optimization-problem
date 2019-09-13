@@ -1,4 +1,4 @@
-# problem-solving
+# Problem solving
 
 * n-queens
   - backtracking
