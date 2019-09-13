@@ -5,8 +5,8 @@
   - PPC : gecode
   - SAT : picosat 
   - SWI-Prolog
-* subsetSumSolver
-* latinSquare
+* sub set sum
+* latin square
   - PPC : gecode
-* magicSequence
+* magic sequence
   - PPC : gecode
