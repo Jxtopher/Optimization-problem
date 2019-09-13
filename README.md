@@ -1,12 +1,12 @@
 # problem-solving
 
 * n-queens
- - backtracking
- - PPC : gecode
- - SAT : picosat 
- - SWI-Prolog
+  - backtracking
+  - PPC : gecode
+  - SAT : picosat 
+  - SWI-Prolog
 * subsetSumSolver
 * latinSquare
- - PPC : gecode
+  - PPC : gecode
 * magicSequence
- - PPC : gecode
+  - PPC : gecode
