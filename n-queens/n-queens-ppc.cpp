@@ -5,8 +5,9 @@
 /// @date 2019
 /// @brief http://www.csplib.org/Problems/prob054/
 ///
-/// @compilation: g++ -Os n-queens-cnf-file.cpp -o n-queens-cnf-file
-/// @execution: g++ n-queens-ppc.cpp -lgecodeint -lgecodesearch -lgecodekernel -lgecodesupport -lgecodedriver -lgecodeminimodel -lgecodegist
+/// @compilation: g++ -Os n-queens-ppc.cpp -o n-queens-ppc -lgecodeint -lgecodesearch -lgecodekernel -lgecodesupport -lgecodedriver -lgecodeminimodel -lgecodegist
+/// @fixed-bug-lib : sudo strip --remove-section=.note.ABI-tag /usr/lib/x86_64-linux-gnu/libQt5Core.so.5.11.3
+/// @execution: 
 ///
 
 //
@@ -38,8 +39,8 @@ class Nqueen  : public Script {
 
             // diagos
             {
-                for (unsigned int i = 0 ; i < n  ; i++) {
-                    for(unsigned int j = i + 1 ; j < n ; j++) {
+                for (long i = 0 ; i < n  ; i++) {
+                    for(long j = i + 1 ; j < n ; j++) {
                         rel(*this, solution[i] != solution[j] - abs(j - i));
                         rel(*this, solution[i] != solution[j] + abs(j - i));
                     }
@@ -50,13 +51,13 @@ class Nqueen  : public Script {
         }
 
 
-    Nqueen(bool share, Nqueen& s) : 
-        Script(share,s), n(s.n) {
-        solution.update(*this, share, s.solution);
+    Nqueen(Nqueen& s) : 
+        Script(s), n(s.n) {
+        solution.update(*this,  s.solution);
     }
 
-    virtual Space* copy(bool share) {
-        return new Nqueen(share,*this);
+    virtual Space* copy(void) {
+        return new Nqueen(*this);
     }
 
     virtual void print(std::ostream& os) const {
