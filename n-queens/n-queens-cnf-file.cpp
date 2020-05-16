@@ -130,7 +130,6 @@ int main(int argc, char **argv) {
         createnumClauses(v, clauses, numClauses);
     }
 
-    //
     cout<<"c  "<<n<<"-queens-CNF-File.cnf"<<endl;
     cout<<"c"<<endl;
     cout<<"p cnf "<<n*n<<" "<<numClauses<<endl;
