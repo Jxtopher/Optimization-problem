@@ -1,4 +1,4 @@
-///
+/// :)
 /// @file n-queens-ppc.cpp
 /// @author Jxtopher
 /// @version 1
