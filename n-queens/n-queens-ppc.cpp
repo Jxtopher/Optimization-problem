@@ -20,7 +20,6 @@
 #include <gecode/driver.hh>
 
 
-
 using namespace Gecode;
 using namespace std;
 
@@ -61,8 +60,6 @@ class Nqueen  : public Script {
     }
 
     virtual void print(std::ostream& os) const {
-         
-
         for (unsigned int i = 0 ; i < n ; i++) {
             os<<solution[i];
             os.width(2);
