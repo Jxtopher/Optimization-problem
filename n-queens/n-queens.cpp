@@ -9,23 +9,12 @@
 /// @compilation: g++ n-queens.cpp -std=c++0x -Wall -O -pedantic -Wall -Wextra -Wcast-align -Wcast-qual -Wctor-dtor-privacy -Wdisabled-optimization -Wformat=2 -Winit-self -Wlogical-op -Wmissing-declarations -Wmissing-include-dirs -Wnoexcept -Wold-style-cast -Woverloaded-virtual -Wredundant-decls -Wshadow -Wsign-conversion -Wsign-promo -Wstrict-null-sentinel -Wstrict-overflow=5 -Wswitch-default -Wundef -Werror -Wno-unused
 ///
 
-/* @Example class call Nqueen to solve the problem n-queen:
-using namespace jxtopher;
-
-int main() {
-    unsigned int N = 5;
-    Nqueen solver;
-    solver.nqueen_recursive(N);
-	solver.nqueen_iterative(N);
-    return EXIT_SUCCESS;
-}
-*/
-
 #include <cstdlib>
 #include <iostream>
 #include <cmath>
 #include <list>
 #include <vector>
+#include <stack>
 
 using namespace std;
 
@@ -141,6 +130,20 @@ public:
 		cout<<"[+] *** END ***"<<endl;
 	}
 
+	void nqueen_with_stack(unsigned int n) {
+		Solution solution(n);
+		list <Solution> final_solution;
+		backtracking_with_stack(n, final_solution);
+
+		cout<<"[+] Possible solutions :"<<endl;
+		unsigned int i = 1;
+		for (std::list<jxtopher::Solution>::iterator it=final_solution.begin(); it!=final_solution.end(); ++it) {
+			cout<<i++<<" : ";
+			(*it).print();
+		}
+		cout<<"[+] *** END ***"<<endl;
+	}
+
 protected:
 	// --------------------------------------------------------------------------
 	// Backtracking recursive
@@ -165,6 +168,35 @@ protected:
 			}
 		}
 	}
+
+	void backtracking_with_stack(unsigned int n, list<Solution> & final_solution) {
+		stack<pair<Solution, unsigned int>> tree;
+		unsigned int currentCell = 0;
+
+		for (unsigned int i = 0 ; i < n ; i++) {
+			Solution solution(n);
+			solution[currentCell] = static_cast<int>(i);
+			tree.push(pair<Solution, unsigned int>(solution, currentCell));
+		}
+
+		while (!tree.empty()) {
+			pair<Solution, unsigned int> pick = tree.top();
+			tree.pop();
+
+			pick.second += 1;
+			if (pick.second < n) {
+				for (unsigned int i = 0 ; i < n ; i++) {
+					pick.first[pick.second] = static_cast<int>(i);
+					if (filtering(pick.first, pick.second))
+						tree.push(pick);
+				}
+			} else {
+				if (filtering(pick.first, pick.second))
+					final_solution.push_front(pick.first);
+			}
+		}
+	}
+
 
 	// Vérification des contraites
 	bool filtering(const Solution &solution, const unsigned int n) {
@@ -242,7 +274,6 @@ protected:
 		}
 	}
 
-
 	// Vérification des contraites
 	bool filtering(const vector<int> &solution, const unsigned int n) {
 			bool constraint_line = check_line(solution, n);
@@ -274,4 +305,14 @@ protected:
 
 }
 
+/* @Example class call Nqueen to solve the problem n-queen:*/
+using namespace jxtopher;
 
+int main() {
+    unsigned int N = 5;
+    Nqueen solver;
+    solver.nqueen_recursive(N);
+	solver.nqueen_iterative(N);
+	solver.nqueen_with_stack(N);
+    return EXIT_SUCCESS;
+}
