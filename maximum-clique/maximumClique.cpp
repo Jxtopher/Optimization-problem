@@ -6,6 +6,7 @@
 /// @brief Problème de la clique maximale
 ///        see : https://fr.wikipedia.org/wiki/Problème_de_la_clique
 ///              http://www.csplib.org/Problems/prob074/
+///	   	 Karp's 21 NP-complete problems n°3 : http://cgi.di.uoa.gr/~sgk/teaching/grad/handouts/karp.pdf
 /// compilation g++ -Os maximumClique.cpp
 /// 
 ///
