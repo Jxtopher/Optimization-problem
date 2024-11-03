@@ -1,20 +1,5 @@
-# elixir n-queens.exs n
-
-defmodule Stack do
-  use GenServer
-
-  @impl true
-  def init(stack), do: {:ok, stack}
-
-  @impl true
-  def handle_call(:pop, _from, [head | tail]), do: {:reply, head, tail}
-
-  @impl true
-  def handle_call(:size, _from, state), do: {:reply, length(state), state}
-
-  @impl true
-  def handle_cast({:push, element}, state), do: {:noreply, [element | state]}
-end
+# https://www.csplib.org/Problems/prob054/
+# Execute the code: elixir nqueens.exs
 
 defmodule Nqueens do
   defmodule Constraint do
@@ -32,38 +17,26 @@ defmodule Nqueens do
     def line?([head | tail], a) when head != a, do: line?(tail, a)
     def line?(_, _), do: false
 
-    def constrains?(solution, a), do: line?(solution, a) and diago?(solution, a)
+    def constrains?(solution, a) do
+      line?(solution, a) and diago?(solution, a)
+    end
   end
 
-  defmodule Solve do
-    def exploration(n, [], depth, results_acc), do: breadth(n, [0], depth, results_acc)
+  def solve(n), do: solve(n, [], 0)
+  def solve(n, solution, depth) when depth == n, do: solution
 
-    def exploration(n, [head | tail], depth, results_acc) do
-      if Constraint.constrains?(tail, head) do
-        breadth(n, [0] ++ [head | tail], depth, results_acc)
-      end
-    end
-
-    def breadth(n, solution, depth, results_acc) do
-      if length(solution) == n + 1 do
-        [head | tail] = solution
-
-        if Constraint.constrains?(tail, head) do
-          # IO.inspect([solution, depth])
-          GenServer.cast(results_acc, {:push, solution})
+  def solve(n, solution, depth) do
+    Enum.reduce(0..(n - 1), [], fn i, acc ->
+      if Constraint.constrains?(solution, i) do
+        if depth + 1 == n do
+          acc ++ [solve(n, [i] ++ solution, depth + 1)]
+        else
+          acc ++ solve(n, [i] ++ solution, depth + 1)
         end
+      else
+        acc
       end
-
-      if depth < n do
-        exploration(n, solution, depth + 1, results_acc)
-      end
-
-      [head | tail] = solution
-
-      if head < n do
-        breadth(n, [head + 1 | tail], depth, results_acc)
-      end
-    end
+    end)
   end
 
   # main
@@ -79,16 +52,14 @@ defmodule Nqueens do
 
     IO.puts("NQueens solver, N = " <> arg)
 
-    n = String.to_integer(arg) - 1
+    n = String.to_integer(arg)
 
-    {:ok, results_acc} = GenServer.start_link(Stack, [])
+    solutions = solve(n)
 
-    Solve.exploration(n, [], 0, results_acc)
-
-    IO.puts("Number of solutions found #{GenServer.call(results_acc, :size)}")
+    IO.puts("Number of solutions found #{length(solutions)}")
 
     IO.puts("Example of solution found:")
-    solution = GenServer.call(results_acc, :pop)
+    solution = Enum.at(solutions, 0)
     IO.inspect(solution)
 
     for i <- 0..n do
